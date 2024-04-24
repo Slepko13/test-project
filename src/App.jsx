@@ -1,10 +1,7 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { MyBrowser } from "./components/my-browser";
 
-const data = [
+const defaultData = [
   {
     name: "Folder 1",
     children: [
@@ -17,7 +14,7 @@ const data = [
   },
   {
     name: "Folder 2",
-    children: [{ name: "file3.txt", mimeType: "text/plain" }],
+    children: [{ name: "book.txt", mimeType: "text/plain" }],
   },
   {
     name: "Folder A",
@@ -27,19 +24,22 @@ const data = [
         children: [
           {
             name: "Folder C",
-            children: [{ name: "Hello_world.js", mimeType: "text/plain" }],
+            children: [{ name: "Hello_world.js", mimeType: "text/javascript" }],
           },
-          { name: " hello_Im_in_B.js", mimeType: "text/plain" },
+          { name: " hello_Im_in_B.js", mimeType: "text/javascript" },
+          { name: " hello_Im_in_B2.js", mimeType: "text/javascript" },
         ],
       },
     ],
   },
 ];
 
-const expandedFolders = ["/Folder 1", "/Folder A/Folder B/Folder C"];
+const defaultExpandedFolders = ["/Folder A/Folder B/Folder C"];
 
 function App() {
-  return <MyBrowser data={data} expandedFolders={expandedFolders} />;
+  return (
+    <MyBrowser data={defaultData} expandedFolders={defaultExpandedFolders} />
+  );
 }
 
 export default App;

@@ -1,18 +1,15 @@
 export const myParseInt = (str) => {
   if (typeof str === "number") {
-    console.log(str);
     return str;
   }
 
   if (typeof str !== "string") {
-    console.log(str);
     return NaN;
   }
 
   str = str.trim();
 
   if (str.length < 1) {
-    console.log(str, NaN);
     return NaN;
   }
 
@@ -28,7 +25,6 @@ export const myParseInt = (str) => {
     }
   }
   if (substr.length < 1) {
-    console.log(str, NaN);
     return NaN;
   }
 
@@ -65,26 +61,22 @@ const matrix2 = [
 ];
 
 const matrix3 = [[1, 2, 3]];
+
 const isMatrixCorrect = (matrix) => {
   if (!matrix || matrix.length < 1 || matrix[0].length < 1) return false;
   let rowLength = matrix[0].length;
 
   for (let row of matrix) {
     if (rowLength !== row.length) {
-      console.log(false);
       return false;
     }
   }
 
-  console.log(true);
+  return true;
 };
 
-isMatrixCorrect(matrix);
-
 function printMatrixToSpiral(matrix) {
-  if (!matrix || matrix.length === 0 || matrix[0].length === 0) {
-    return;
-  }
+  if (!isMatrixCorrect(matrix)) return;
 
   let topRow = 0;
   let bottomRow = matrix.length - 1;
@@ -117,7 +109,7 @@ function printMatrixToSpiral(matrix) {
   }
 }
 
-printMatrixToSpiral(matrix2);
+// printMatrixToSpiral(matrix2);
 
 const printMatrixToSpiralRec = (
   matrix,
@@ -149,11 +141,10 @@ const printMatrixToSpiralRec = (
     rightCol - 1
   );
 };
-console.log("===============================");
-printMatrixToSpiralRec(
-  matrix2,
-  0,
-  matrix2.length - 1,
-  0,
-  matrix2[0].length - 1
-);
+// printMatrixToSpiralRec(
+//   matrix2,
+//   0,
+//   matrix2.length - 1,
+//   0,
+//   matrix2[0].length - 1
+// );

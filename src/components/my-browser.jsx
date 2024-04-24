@@ -2,14 +2,14 @@ import { Component } from "react";
 import { Folder } from "./folder";
 import { File } from "./file";
 
-const routeBuilder = (parentRoute, name) => {
+const routeBuilder = (name, parentRoute) => {
   return parentRoute ? `${parentRoute}/${name}` : `/${name}`;
 };
 
 const renderItems = (items, expandedFolders, parentRoute) => {
   return items.map((item) => {
     if (!item.mimeType) {
-      const routeToFolder = routeBuilder(parentRoute, item.name);
+      const routeToFolder = routeBuilder(item.name, parentRoute);
       return (
         <Folder
           key={item.name}
@@ -26,10 +26,97 @@ const renderItems = (items, expandedFolders, parentRoute) => {
   });
 };
 
-export class MyBrowser extends Component {
-  render() {
-    const { data, expandedFolders } = this.props;
+const getPathsToExpand = (data, searchValue) => {
+  if (searchValue.length < 1) return [];
+  const paths = [];
 
-    return <div>{renderItems(data, expandedFolders)}</div>;
+  const searchFiles = (currentPath, currentItem) => {
+    if (currentItem.children) {
+      currentItem.children.forEach((child) => {
+        if (child.children) {
+          searchFiles(`${currentPath}/${currentItem.name}`, child);
+        } else if (
+          child.name.toLowerCase().includes(searchValue.toLowerCase()) &&
+          child.mimeType
+        ) {
+          paths.push(`${currentPath}/${currentItem.name}`);
+        }
+      });
+    }
+  };
+
+  data.forEach((item) => {
+    searchFiles("", item);
+  });
+
+  return paths;
+};
+
+export class MyBrowser extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchValue: "",
+      filteredData: this.props.data,
+      pathsToExpand: this.props.expandedFolders,
+    };
+    this.timer = null;
+  }
+
+  filterData = (data, searchValue, parentRoute) => {
+    if (searchValue.length < 1) return data;
+
+    return data.reduce((acc, item) => {
+      const routeToFolder = routeBuilder(item.name, parentRoute);
+      if (item.children) {
+        const filteredChildren = this.filterData(
+          item.children,
+          searchValue,
+          routeToFolder
+        );
+        if (filteredChildren.length > 0) {
+          acc.push({ ...item, children: filteredChildren });
+        }
+      } else {
+        if (
+          item.name &&
+          item.name.toLowerCase().includes(searchValue.toLowerCase()) &&
+          item.mimeType
+        ) {
+          acc.push(item);
+        }
+      }
+      return acc;
+    }, []);
+  };
+
+  handleChange = (event) => {
+    clearTimeout(this.timer);
+    const value = event.target.value.trim();
+    this.setState({ searchValue: value });
+    this.timer = setTimeout(() => {
+      this.setState({
+        filteredData: this.filterData(this.props.data, this.state.searchValue),
+        pathsToExpand: getPathsToExpand(
+          this.props.data,
+          this.state.searchValue
+        ),
+      });
+    }, 400);
+  };
+
+  render() {
+    return (
+      <>
+        <input
+          type="text"
+          value={this.state.searchValue}
+          onChange={this.handleChange}
+        />
+        <div>
+          {renderItems(this.state.filteredData, this.state.pathsToExpand)}
+        </div>
+      </>
+    );
   }
 }

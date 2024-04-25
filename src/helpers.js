@@ -1,3 +1,5 @@
+//* TASK 1
+
 export const myParseInt = (str) => {
   if (typeof str === "number") {
     return str;
@@ -43,6 +45,8 @@ export const myParseInt = (str) => {
 // myParseInt("-12dd");
 // myParseInt("     34kkk");
 // myParseInt("1    0");
+
+//* Task 2
 
 const matrix = [
   [1, 2, 3, 4],

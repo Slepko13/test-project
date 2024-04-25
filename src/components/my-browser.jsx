@@ -8,7 +8,7 @@ const routeBuilder = (name, parentRoute) => {
 
 const renderItems = (items, expandedFolders, parentRoute) => {
   return items.map((item) => {
-    if (!item.mimeType) {
+    if (!item.mime) {
       const routeToFolder = routeBuilder(item.name, parentRoute);
       return (
         <Folder
@@ -37,7 +37,7 @@ const getPathsToExpand = (data, searchValue) => {
           searchFiles(`${currentPath}/${currentItem.name}`, child);
         } else if (
           child.name.toLowerCase().includes(searchValue.toLowerCase()) &&
-          child.mimeType
+          child.mime
         ) {
           paths.push(`${currentPath}/${currentItem.name}`);
         }
@@ -81,7 +81,7 @@ export class MyBrowser extends Component {
         if (
           item.name &&
           item.name.toLowerCase().includes(searchValue.toLowerCase()) &&
-          item.mimeType
+          item.mime
         ) {
           acc.push(item);
         }
